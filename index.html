@@ -4,7 +4,7 @@
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>
-		
+		<p><br/>Just HTML:<br/></p>
 		<table id="tbl" style="table">
 			<!-- Here you put months' names -->
 			<tr class="dark-gray">
@@ -396,12 +396,13 @@
 				<td></td>
 			</tr>
 		</table>
+		<p><br/>JS Generated:<br/></p>
 		<table id="myTable"></table>
 		<script type="text/ecmascript" src="js/jquery-3.1.1.min.js"></script>
 		<script type="text/ecmascript" src="js/script.js"></script>
 		<script type="text/ecmascript">
 			let startDate = new Date(2016, 9, 1); // 2016-10-01
-            var timetable = new timeTable('#myTable', startDate, 4);
+            let timetable = new timeTable('#myTable', startDate, 4, 13);
             timetable.drawTable();
 		</script>
 	</body>

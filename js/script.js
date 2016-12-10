@@ -1,60 +1,63 @@
 class timeTable {
-    constructor(htmlId, startDate, numberOfMonths) {
+    constructor(htmlId, startDate, numberOfMonths, numberOfClassHours) {
         this.htmlId = htmlId;
         this.numberOfMonths = numberOfMonths;
         this.startDate = startDate;
+        this.numberOfClassHours = numberOfClassHours;
     }
 
 
     drawTable() {
         $(this.htmlId).attr('style', 'table');
-        $(this.htmlId).append(this.__getTableHeadersHtml().join(''));
-        $(this.htmlId).append(this.__getDayHeaders(1).join(''));
+        $(this.htmlId).append(this.__drawAll().join(''));
     }
 
     __cloneDate(date) {
         return new Date(date.getTime());
     }
 
-    __getTableHeadersHtml() {
+    __drawAll() {
+        let data = this.__generateMonthsAndDays(this.startDate);
         let html = [];
+        //Header - months
         html.push('<tr class="dark-gray">');
         html.push('<td colspan="2">Mc-e</td>');
-        let objectOfWork = this.__cloneDate(this.startDate);
-        console.log(objectOfWork);
-        for (let i = 1; i <= this.numberOfMonths; i++) {
-            let numOfWeeks = this.__weeksinMonth(objectOfWork);
-            html.push('<td colspan="' + numOfWeeks + '">' + this.__getRomanNum(objectOfWork.getMonth() + 1) + '</td>');
-            objectOfWork = this.__addMonth(objectOfWork);
+        for (let i = 0; i < this.numberOfMonths; i++) {
+            html.push('<td colspan="' + data[i].numOfWeeks + '">' + data[i].roman + '</td>');
         }
         html.push('<td rowspan="2">Sale</td>');
         html.push('</tr>');
-        return html;
-    }
-
-    __getDayHeaders(day) {
-        let html = [];
+        //EOHeader
+        //Days
         html.push('<tr class="dark-gray">');
         html.push('<td colspan="2">dni</td>');
-        let objectOfWork = this.__cloneDate(this.startDate);
         for (let i = 0; i < this.numberOfMonths; i++) {
-            objectOfWork.setDate(1);
-            let mondays = this.__getSameDays(objectOfWork, day);
-            let lastMonthDayIncluded = false;
-            console.log(mondays, objectOfWork);
-            for (let y = 0; y < mondays.length; y++) {
-                if (mondays[0] <= 7 && mondays[0] != 1 && objectOfWork.getMonth() == this.startDate.getMonth() && !lastMonthDayIncluded) {
-                    let dt = this.__cloneDate(objectOfWork);
-                    dt.setDate(mondays[0]);
-                    dt.setDate(dt.getDate() - 7);
-                    html.push('<td>' + dt.getDate() + '</td>');
-                    lastMonthDayIncluded = true;
-                }
-                html.push('<td>' + mondays[y] + '</td>');
+            for (let y = 0; y < data[i].numOfWeeks; y++) {
+                html.push('<td>' + data[i].days[1][y] + '</td>');
             }
-            objectOfWork = this.__addMonth(objectOfWork);
         }
         html.push('</tr>');
+        //EODays
+        //Hours
+        for (let dayOfWeek = 1; dayOfWeek <= 5; dayOfWeek++) { // 5 - Friday, 7 - Sunday
+            let dayNo = dayOfWeek == 7 ? 0 : dayOfWeek;
+            html.push('<tr><td rowspan="14"><div class="vertical-text">' + this.__getWeekDayName(dayNo) + '</div></td></tr>');
+            for (let numOfClass = 1; numOfClass <= this.numberOfClassHours; numOfClass++) {
+                html.push('<tr><td class="dark-gray">' + numOfClass + '</td>');
+                for (let i = 0; i < data.length; i++) {
+                    for(let weeksNum = 0; weeksNum < data[i].numOfWeeks; weeksNum++)
+                    {
+                        let day = data[i].days[dayNo][weeksNum];
+                        let id = "class-" + numOfClass + "-" + data[i].year + "-" + data[i].month + "-" + day;
+                        html.push('<td id="' + id + '"></td>');
+                    }
+                }
+                html.push('<td id="salaX"></td>');
+                html.push('</tr>');
+            }
+        }
+
+        //EOHours
         return html;
     }
 
@@ -67,11 +70,44 @@ class timeTable {
     }
 
     __weeksinMonth(date) {
-        let y = date.getFullYear();
-        let m = date.getMonth() + 1;
-        y = y || new Date().getFullYear();
-        let d = new Date(y, m, 0);
-        return Math.floor((d.getDate() - 1) / 7) + 1;
+        let first = this.__cloneDate(date);
+        let last = this.__cloneDate(date);
+        first.setDate(1);
+        last = this.__addMonth(last);
+        last = new Date(last.getFullYear(), last.getMonth(), 0);
+        let firstWeekNo = getWeekNumber(first);
+        let lastWeekNo = getWeekNumber(last);
+        if (firstWeekNo > lastWeekNo) {
+            lastWeekNo += 52;
+        }
+        return lastWeekNo - firstWeekNo + 1;
+
+    }
+
+    __generateMonthsAndDays(date) {
+        let dt = this.__cloneDate(date);
+        dt.setDate(1);
+        let data = [];
+        for (let i = 0; i < this.numberOfMonths; i++) {
+            let monthNo = dt.getMonth() + 1;
+            let roman = this.__getRomanNum(monthNo);
+            let numOfWeeks = this.__weeksinMonth(dt);
+            if (dt.getDay() != 1) numOfWeeks--;
+            let days = [];
+            for (let day = 0; day <= 6; day++) {
+                days[day] = this.__getSameDays(dt, day);
+            }
+
+            data[i] = {
+                roman: roman,
+                numOfWeeks: numOfWeeks,
+                days: days,
+                year: dt.getFullYear(),
+                month: dt.getMonth() + 1
+            };
+            dt = this.__addMonth(dt);
+        }
+        return data;
     }
 
     __getRomanNum(num) {
@@ -82,6 +118,13 @@ class timeTable {
             '0', 'I', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X', 'XI', 'XII'
         ];
         return nums[num];
+    }
+
+    __getWeekDayName(dayNo) {
+        let names = [
+            'Niedziela', 'Poniedzialek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'
+        ]
+        return names[dayNo];
     }
 
 
@@ -98,4 +141,13 @@ class timeTable {
         }
         return sameDays;
     }
+}
+
+function getWeekNumber(d) {
+    d = new Date(+d);
+    d.setHours(0, 0, 0, 0);
+    d.setDate(d.getDate() + 4 - (d.getDay() || 7));
+    let yearStart = new Date(d.getFullYear(), 0, 1);
+    return Math.ceil(( ( (d - yearStart) / 86400000) + 1) / 7);
+
 }
