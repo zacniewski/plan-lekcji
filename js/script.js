@@ -10,7 +10,7 @@ class timeTable {
     drawTable() {
         $(this.htmlId).attr('style', 'table');
         $(this.htmlId).append(this.__getTableHeadersHtml().join(''));
-        $(this.htmlId).append(this.__getSubHeadersHtml().join(''));
+        $(this.htmlId).append(this.__getMondays().join(''));
 
     }
 
@@ -34,7 +34,7 @@ class timeTable {
         return html;
     }
 
-    __getSubHeadersHtml() {
+    __getMondays() {
         let html = [];
         html.push('<tr class="dark-gray">');
         html.push('<td colspan="2">dni</td>');
@@ -50,12 +50,13 @@ class timeTable {
             let numOfWeeks = this.__weeksinMonth(monthOfWork, yearOfWork);
             let first = new Date(yearOfWork, monthOfWork - 1);
             let mondays = this.__getSameDays(first, 1);
-            console.log(mondays);
+            let lastMonthDayIncluded = false;
             for (let y = 0; y < mondays.length; y++) {
-                if (mondays[y] < 6 && mondays[y] != 1 && i == this.startMonth) {
+                if (mondays[0] <= 7 && mondays[0] != 1 && i == this.startMonth && !lastMonthDayIncluded) {
                     let dt = new Date(2016, monthOfWork - 1, mondays[0]);
                     dt.setDate(dt.getDate() - 7);
-                    html.push('<td>' + dt.getDate() +'</td>');
+                    html.push('<td>' + dt.getDate() + '</td>');
+                    lastMonthDayIncluded = true;
                 }
                 html.push('<td>' + mondays[y] + '</td>');
                 nextDay += 7;
