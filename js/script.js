@@ -48,8 +48,16 @@ class timeTable {
                 yearOfWork++;
             }
             let numOfWeeks = this.__weeksinMonth(monthOfWork, yearOfWork);
-            for (let y = 0; y < numOfWeeks; y++) {
-                html.push('<td>' + nextDay + '</td>');
+            let first = new Date(yearOfWork, monthOfWork - 1);
+            let mondays = this.__getSameDays(first, 1);
+            console.log(mondays);
+            for (let y = 0; y < mondays.length; y++) {
+                if (mondays[y] < 6 && mondays[y] != 1 && i == this.startMonth) {
+                    let dt = new Date(2016, monthOfWork - 1, mondays[0]);
+                    dt.setDate(dt.getDate() - 7);
+                    html.push('<td>' + dt.getDate() +'</td>');
+                }
+                html.push('<td>' + mondays[y] + '</td>');
                 nextDay += 7;
             }
         }
@@ -73,16 +81,13 @@ class timeTable {
     __getSameDays(date, dayNumber) {
         let month = date.getMonth(), sameDays = [];
         date.setDate(1);
-
-        while(date.getDay() !== 1) {
+        while (date.getDay() !== dayNumber) {
             date.setDate(date.getDate() + 1);
         }
-
         while (date.getMonth() === month) {
-            sameDays.push(new Date(date.getTime()));
+            sameDays.push(date.getDate());
             date.setDate(date.getDate() + 7);
         }
-
         return sameDays;
     }
 }
