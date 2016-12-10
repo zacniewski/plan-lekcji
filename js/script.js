@@ -56,9 +56,9 @@ class timeTable {
             for (let numOfClass = 1; numOfClass <= this.numberOfClassHours; numOfClass++) {
                 html.push('<tr><td class="dark-gray">' + numOfClass + '</td>');
                 for (let i = 0; i < data.length; i++) {
-                    for (let weeksNum = 0; weeksNum < data[i].numOfWeeks; weeksNum++) {
+                    for (let weeksNum = 0; weeksNum < data[i].days[dayNo].length; weeksNum++) {
                         let day = data[i].days[dayNo][weeksNum];
-                        let id = "class-" + numOfClass + "-" + data[i].year + "-" + data[i].month + "-" + day;
+                        let id = "class-" + numOfClass + "-" + data[i].year + "-" + (day.getMonth()+1) + "-" + day.getDate();
                         html.push('<td id="' + id + '"></td>');
                     }
                 }
@@ -135,12 +135,10 @@ class timeTable {
         lastDay.setDate(1);
         lastDay.setMonth(lastDay.getMonth() + 1);
         lastDay.setDate(0);
-        console.log(daydiff(lastMonday, lastDay), lastMonday, lastDay);
         let numOfDaysToPush = 6 - (daydiff(lastMonday, lastDay));
         let dat = this.__cloneDate(lastMonday);
         dat.setDate(1);
         dat.setMonth(dat.getMonth() + 1);
-        console.log(dat);
         for (let i = 8 - numOfDaysToPush; i <= 7; i++) {
             let dayNo = i == 7 ? 0 : i;
             data[data.length - 1].days[dayNo].push(this.__cloneDate(dat));
