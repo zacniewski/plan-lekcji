@@ -28,25 +28,52 @@ class timeTable {
         html.push('<td rowspan="2">Sale</td>');
         html.push('</tr>');
         //EOHeader
-        //Days
-        html.push('<tr class="dark-gray">');
-        html.push('<td colspan="2">dni</td>');
-        for (let i = 0; i < this.numberOfMonths; i++) {
-            for (let y = 0; y < data[i].numOfWeeks; y++) {
-                html.push('<td>' + data[i].days[1][y] + '</td>');
-            }
-        }
-        html.push('</tr>');
-        //EODays
+
         //Hours
-        for (let dayOfWeek = 1; dayOfWeek <= 5; dayOfWeek++) { // 5 - Friday, 7 - Sunday
+        for (let dayOfWeek = 1; dayOfWeek <= 7; dayOfWeek++) { // 5 - Friday, 7 - Sunday
             let dayNo = dayOfWeek == 7 ? 0 : dayOfWeek;
-            html.push('<tr><td rowspan="14"><div class="vertical-text">' + this.__getWeekDayName(dayNo) + '</div></td></tr>');
+            //Days
+            html.push('<tr class="dark-gray">');
+            html.push('<td colspan="2">dni</td>');
+            for (let i = 0; i < this.numberOfMonths; i++) {
+                for (let y = 0; y < data[i].numOfWeeks; y++) {
+                    let daynum = null;
+                    if (data[i].days[dayNo][y] === undefined && i != this.numberOfMonths - 1) {
+                        daynum = data[i + 1].days[dayNo][0];
+                    } else {
+                        daynum = data[i].days[dayNo][y];
+                        if(y==0)
+                        {
+                            let testDate = new Date(data[i].year, data[i].month-1, daynum);
+
+                            if(daynum < this.__getFirstMondayDayNumber(testDate)){
+                                console.log(this.__getFirstMondayDayNumber(testDate));
+                                console.log(testDate);
+                                console.log(data[i].days[dayNo]);
+                                daynum = data[i].days[dayNo][y+1];
+                            }
+                        }
+                    }
+
+                    if(y==0 && i != 0)
+                    {
+                        let testDate = new Date(data[i].year, data[i].month, 1);
+                        let lastMonth = new Date(data[i].year, data[i].month, 0);
+                        if(getWeekNumber(testDate) == getWeekNumber(lastMonth)){
+                            continue;
+                        }
+                    }
+
+                    html.push('<td>' + daynum + '</td>');
+                }
+            }
+            html.push('</tr>');
+            //EODays
+            html.push('<tr><td rowspan="'+ (this.numberOfClassHours + 1) +'"><div class="vertical-text">' + this.__getWeekDayName(dayNo) + '</div></td></tr>');
             for (let numOfClass = 1; numOfClass <= this.numberOfClassHours; numOfClass++) {
                 html.push('<tr><td class="dark-gray">' + numOfClass + '</td>');
                 for (let i = 0; i < data.length; i++) {
-                    for(let weeksNum = 0; weeksNum < data[i].numOfWeeks; weeksNum++)
-                    {
+                    for (let weeksNum = 0; weeksNum < data[i].numOfWeeks; weeksNum++) {
                         let day = data[i].days[dayNo][weeksNum];
                         let id = "class-" + numOfClass + "-" + data[i].year + "-" + data[i].month + "-" + day;
                         html.push('<td id="' + id + '"></td>');
@@ -140,6 +167,22 @@ class timeTable {
             date.setDate(date.getDate() + 7);
         }
         return sameDays;
+    }
+
+    __getFirstMondayDayNumber(date)
+    {
+        let dt = this.__cloneDate(date);
+        dt.setDate(1);
+        for(let i = 1; i < 10; i++)
+        {
+            if(dt.getDay() == 1)
+            {
+                console.log("s",dt);
+                return dt.getDate();
+            }
+            dt.setDate(i);
+        }
+
     }
 }
 
