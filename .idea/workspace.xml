@@ -83,6 +83,7 @@
         <option value="$PROJECT_DIR$/script.js" />
         <option value="$PROJECT_DIR$/index.html" />
         <option value="$PROJECT_DIR$/js/script.js" />
+        <option value="$PROJECT_DIR$/.gitignore" />
       </list>
     </option>
   </component>
@@ -347,12 +348,12 @@
       <updated>1480523109128</updated>
       <workItem from="1480523111461" duration="1853000" />
       <workItem from="1480538249909" duration="5504000" />
-      <workItem from="1481382956614" duration="3578000" />
+      <workItem from="1481382956614" duration="3601000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="10935000" />
+    <option name="totallyTimeSpent" value="10958000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-7" y="0" width="1932" height="1047" extended-state="0" />
