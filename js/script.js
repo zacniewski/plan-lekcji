@@ -1,15 +1,27 @@
+function addContentEditable() {
+    $("#" + event.target.id).attr("contenteditable", "true");
+}
+
+function removeContentEditable() {
+    if (event.keyCode == 13) {
+        $("#" + event.target.id).removeAttr("contenteditable");
+    }
+}
+
 const numberOfDaysInWeek = 7; // 7 or 5 only
 
 class timeTable {
     constructor(htmlId, startDate, numberOfMonths, numberOfClassHours) {
         this.htmlId = htmlId;
         this.numberOfMonths = numberOfMonths;
+        startDate.setDate(1);
         this.startDate = startDate;
         this.numberOfClassHours = numberOfClassHours;
     }
 
 
     drawTable() {
+        $(this.htmlId).html(""); // clear previously drawn table
         $(this.htmlId).attr('style', 'table');
         $(this.htmlId).append(this.__drawAll().join(''));
     }
@@ -37,6 +49,12 @@ class timeTable {
             html.push('<td colspan="' + data[i].numOfWeeks + '">' + data[i].roman + '</td>');
         }
         html.push('<td rowspan="2">Sale</td>');
+        html.push('<td rowspan="2">Symbol</td>');
+        html.push('<td rowspan="2">Przedmiot/Wykladowca</td>');
+        html.push('<td rowspan="2">W</td>');
+        html.push('<td rowspan="2">Cw</td>');
+        html.push('<td rowspan="2">Spos. Zal.</td>');
+        html.push('<td rowspan="2">ECTS</td>');
         html.push('</tr>');
         //EOHeader
         //Hours
@@ -58,11 +76,17 @@ class timeTable {
                 for (let i = 0; i < data.length; i++) {
                     for (let weeksNum = 0; weeksNum < data[i].days[dayNo].length; weeksNum++) {
                         let day = data[i].days[dayNo][weeksNum];
-                        let id = "class-" + numOfClass + "-" + data[i].year + "-" + (day.getMonth()+1) + "-" + day.getDate();
-                        html.push('<td id="' + id + '"></td>');
+                        let id = "class-" + numOfClass + "-" + data[i].year + "-" + (day.getMonth() + 1) + "-" + day.getDate();
+                        html.push('<td id="' + id + '" type="field" onclick="addContentEditable()" onkeydown="removeContentEditable()"></td>');
                     }
                 }
-                html.push('<td id="salaX"></td>');
+                html.push('<td type="field" onclick="addContentEditable()" onkeydown="removeContentEditable()" id="sala_' + dayOfWeek + '_' + numOfClass + '"></td>');
+                html.push('<td type="field" onclick="addContentEditable()" onkeydown="removeContentEditable()" id="symbol_' + dayOfWeek + '_' + numOfClass + '"></td>');
+                html.push('<td type="field" onclick="addContentEditable()" onkeydown="removeContentEditable()" id="wykladowca_' + dayOfWeek + '_' + numOfClass + '"></td>');
+                html.push('<td type="field" onclick="addContentEditable()" onkeydown="removeContentEditable()" id="wyklady_' + dayOfWeek + '_' + numOfClass + '"></td>');
+                html.push('<td type="field" onclick="addContentEditable()" onkeydown="removeContentEditable()" id="cwiczenia_' + dayOfWeek + '_' + numOfClass + '"></td>');
+                html.push('<td type="field" onclick="addContentEditable()" onkeydown="removeContentEditable()" id="sposzal_' + dayOfWeek + '_' + numOfClass + '"></td>');
+                html.push('<td type="field" onclick="addContentEditable()" onkeydown="removeContentEditable()" id="ects_' + dayOfWeek + '_' + numOfClass + '"></td>');
                 html.push('</tr>');
             }
         }
