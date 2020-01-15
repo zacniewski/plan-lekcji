@@ -1,17 +1,18 @@
 <html>
 	<head>
 		<title>TimeTable</title>
+                <meta charset="utf-8"/>
 		<link rel="stylesheet" type="text/css" href="css/style.css">
 	</head>
 	<body>
 		<select id="semesters"></select>
-		<button onclick="generate()">Choose</button>
+		<button onclick="generate()">Wybierz semestr</button>
 		<br /><br />
 		<table id="myTable"></table>
 		<script type="text/ecmascript" src="js/jquery-3.1.1.min.js"></script>
 		<script type="text/ecmascript" src="js/script.js"></script>
 		<script type="text/ecmascript">
-            let semesters = JSON.parse('[{"name":"Zima 2016/2017", "date":"2016-10-01", "semesterLength":4},{"name":"Lato 2017/2018", "date":"2017-02-01", "semesterLength":5}]');
+            let semesters = JSON.parse('[{"name":"Zima 2016/2017", "date":"2016-10-01", "semesterLength":4},{"name":"Lato 2017/2018", "date":"2017-02-01", "semesterLength":5}, {"name":"Zima 2018/2019", "date":"2018-10-01", "semesterLength":5}]');
             // Symulacja pobrania danych o semestrach z jakiegoś API
 
             //generowanie "selecta"

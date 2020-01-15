@@ -1,8 +1,13 @@
 function addContentEditable() {
     $("#" + event.target.id).attr("contenteditable", "true");
+    //$("td").on('click', function () 
+	//{
+	//$("td").attr("contenteditable", "true");
+	//})
 }
 
 function removeContentEditable() {
+
     if (event.keyCode == 13) {
         $("#" + event.target.id).removeAttr("contenteditable");
     }
@@ -183,7 +188,7 @@ class timeTable {
 
     __getWeekDayName(dayNo) {
         let names = [
-            'Niedziela', 'Poniedzialek', 'Wtorek', 'Środa', 'Czwartek', 'Piątek', 'Sobota', 'Niedziela'
+            'Niedziela', 'Poniedzialek', 'Wtorek', 'Sroda', 'Czwartek', 'Piatek', 'Sobota', 'Niedziela'
         ]
         return names[dayNo];
     }
